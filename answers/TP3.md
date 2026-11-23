@@ -96,3 +96,15 @@ I installed `expo-file-system` (`npx expo install expo-file-system`) and wrote `
 3. returns the **new permanent `file://` address**. That address is stored in the item and in AsyncStorage.
 
 The copy is only made when pressing *Save*, so photos picked and then replaced do not leave copies behind. If the copy fails, the item is still saved with the temporary address. In the browser there is no file system, so the address given by the picker is kept as is.
+
+## Final questions
+
+**1. What is the difference between `npx expo install` and `npm install`?**
+`npm install <package>` installs the **latest** version published on npm, whatever SDK the project uses. `npx expo install <package>` looks up the version that was **tested with the project's Expo SDK** (here SDK 58) and installs that one, using npm underneath. It also adds the right config plugin to `app.json` when the library needs one. This matters for libraries with **native code** (camera, location, storage…). Expo Go and the app's native layer are built for one SDK, and a version made for another SDK can crash or give *Cannot find native module*. If npm already put a wrong version, `npx expo install <package>` (or `npx expo install --fix`) puts the right one back.
+
+**2. Why does the app ask for a permission before using the camera or the location?**
+Because they are **private data and sensors**. The camera can film the user and their surroundings, and the location tells where they are and can track where they go. Android and iOS protect them with *runtime permissions*: an app cannot use them until the **user** has said yes in a system dialog that the app cannot fake or skip. The user stays in control and can refuse or revoke later in the settings. The app must handle a refusal properly (here: a message instead of a crash). The texts in `app.json` explain *why* the app needs each permission, and the stores require them.
+
+**3. Name two things this app can do that a website on the same phone could not do as easily.**
+- **Use the phone's hardware directly**: open the native camera and gallery, and read the GPS position, with the system's own permission dialogs and native controls (`Switch`, dialogs, share sheet).
+- **Keep data on the device and talk to other apps**: the list and the photos are saved in the app's own storage and folder (AsyncStorage, `expo-file-system`), and survive closing the app and working offline. The app also hands content to other installed apps: the **system share sheet** (Gmail, Messages, Quick Share…) and **opening Google Maps** at the exact spot with `Linking`.
