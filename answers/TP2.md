@@ -54,3 +54,40 @@ On the emulator, *Remove this item* opens the native confirmation dialog (*Remov
 In the browser (**w**), `http://localhost:8081/item/999` shows the "not found" branch of `[id].tsx`. No item has the id `999`, so `items.find(...)` returns `undefined` and the screen shows **"This item does not exist (anymore)."** with a **Back to the list** link (the header just says *Item*).
 
 **The confirmation dialog does not appear in the browser.** Pressing *Remove this item* on the web does nothing: no dialog, and the item stays. `Alert.alert` is a native API (Android/iOS dialogs). On the web, React Native for Web's `Alert` is an empty function, so the callback that removes the item is never called. (See *Common errors*: "Alert dialogs only work on a device or emulator.")
+
+## Exercise 8: the navigation map
+
+```
+                     _layout.tsx
+        <ItemsProvider>  (owns `items` + addItem / toggleClaimed / removeItem)
+                  └── <Stack>  (pile of screens)
+
+ ┌────────────────────────────────┐   tap "+ Report an item"   ┌─────────────────────────────┐
+ │  /           index.tsx         │ ─────────────────────────▶ │  /add        add.tsx        │
+ │  "Lost & Found"                │    <Link href="/add">       │  "Report an item" (modal)   │
+ │                                │                            │                             │
+ │  uses: items                   │ ◀───────────────────────── │  uses: addItem              │
+ │  (counter, list, waiting)      │   "Save" → addItem(...)     │                             │
+ │                                │   then router.back()        │                             │
+ └────────────────────────────────┘                            └─────────────────────────────┘
+        │            ▲          ▲
+        │ tap a card │          │ "Back to the list"  <Link href="/">
+        │ <Link href │          │ (only when the id does not exist)
+        │ /item/[id]>│          │
+        ▼            │          │
+ ┌───────────────────┴──────────┴──────────────────────────────┐
+ │  /item/[id]   item/[id].tsx   title = item.title            │
+ │                                                             │
+ │  uses: items (find by id from useLocalSearchParams),        │
+ │        toggleClaimed (Switch "Returned to its owner"),      │
+ │        removeItem ("Remove this item" → Alert → Remove      │
+ │                    → removeItem(id) then router.back())     │
+ │  back arrow / router.back() → returns to /                  │
+ └─────────────────────────────────────────────────────────────┘
+```
+
+| Screen | Reached from | Leads to | Context functions used |
+|---|---|---|---|
+| `/` (`index.tsx`) | app start, back from the other screens | `/add` (button), `/item/[id]` (tap a card) | `items` |
+| `/add` (`add.tsx`) | `+ Report an item` on `/` | back to `/` after *Save* (`router.back()`) | `addItem` |
+| `/item/[id]` (`item/[id].tsx`) | tap a card on `/` (or type the URL) | back to `/` (header arrow, after *Remove*, or *Back to the list*) | `items`, `toggleClaimed`, `removeItem` |
