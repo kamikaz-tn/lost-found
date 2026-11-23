@@ -35,3 +35,14 @@ If the gallery is closed without choosing anything, `launchImageLibraryAsync` st
 
 - **The camera** gives the app **direct access to a sensor**: once allowed, the app could take pictures or video of the user and their surroundings by itself. Android and iOS treat it as a *dangerous* permission (`android.permission.CAMERA`), so the app must call `requestCameraPermissionsAsync()` and get an explicit **yes** from the user at runtime. The system dialog only appears the first time. The answer is then remembered.
 - **The gallery picker** does not give the app access to the photo library at all. It opens the **system's own photo picker**, which runs outside our app. The **user** chooses one picture, and the app only receives that single file. Since the user's choice already is the consent, and the app cannot browse or read the other photos, no permission is needed.
+
+## Question 5
+
+After setting a point on the map in the emulator's extended controls (a point in Sousse), *Use my location* (permission accepted) shows:
+
+> `📍 35.82560, 10.60839`
+
+- **`35.82560` is the latitude**: the north–south position, between −90 (South Pole) and +90 (North Pole). It is positive because we are north of the equator.
+- **`10.60839` is the longitude**: the east–west position, between −180 and +180, counted from the Greenwich meridian. It is positive because Tunisia is east of Greenwich.
+
+The order comes from the code in `add.tsx`: `` `📍 ${coords.latitude.toFixed(5)}, ${coords.longitude.toFixed(5)}` ``, latitude first and longitude second, rounded to 5 decimals (about 1 m). When the item is saved, both numbers are stored in it (`latitude`, `longitude`).
