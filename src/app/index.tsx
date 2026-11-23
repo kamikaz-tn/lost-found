@@ -1,21 +1,39 @@
-import { Text, View, StyleSheet } from "react-native";
+import { FlatList, StyleSheet, View } from 'react-native';
 
 import ItemCard from '@/components/ItemCard';
+import { Item } from '@/types';
+
+const STARTER_ITEMS: Item[] = [
+  { id: '1', title: 'Blue water bottle', place: 'Library, 2nd floor' },
+  { id: '2', title: 'Student card', place: 'Cafeteria' },
+  { id: '3', title: 'USB-C charger', place: 'Room B12' },
+  { id: '4', title: 'Black umbrella', place: 'Main entrance' },
+];
 
 export default function Index() {
   return (
-    <View style={styles.container}>
-      <Text>Lost & Found</Text>
-      <ItemCard title="Blue water bottle" place="Library, 2nd floor" />
-      <ItemCard title="Student card" place="Cafeteria" />
+    <View style={styles.screen}>
+      <FlatList
+        data={STARTER_ITEMS}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <ItemCard title={item.title} place={item.place} />}
+        ItemSeparatorComponent={Separator}
+      />
     </View>
   );
 }
 
+function Separator() {
+  return <View style={styles.separator} />;
+}
+
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    padding: 16,
+    backgroundColor: '#f3f4f6',
+  },
+  separator: {
+    height: 10,
   },
 });
