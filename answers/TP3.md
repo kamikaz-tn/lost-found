@@ -66,3 +66,21 @@ The order comes from the code in `add.tsx`: `` `📍 ${coords.latitude.toFixed(5
 `latitude` and `longitude` are optional fields (`latitude?: number`). An item saved without pressing *Use my location* (or the starter items) has no `latitude`, so it is `undefined`, the condition is false and nothing is rendered. Without coordinates there is no "exact spot" to open: the URL would be `…query=undefined,undefined`.
 
 For an item with a location, `Linking.openURL('https://www.google.com/maps/search/?api=1&query=<lat>,<lng>')` hands the link to the system. It opens Google Maps on the spot, or the browser on an emulator without a maps app.
+
+## Exercise 8 / Question 7
+
+`app.json` now ends its `plugins` list with `expo-image-picker` (texts for the photos and camera permissions) and `expo-location` (text for location "when in use"). These sentences go into the native app (`NSCameraUsageDescription`, `NSPhotoLibraryUsageDescription`, `NSLocationWhenInUseUsageDescription` on iOS, plus the permissions in the Android manifest) when the app is built for the stores. Expo Go keeps its own texts.
+
+With *Location* denied for Expo Go (Settings → Apps → Expo Go → Permissions), pressing *Use my location* **does not crash**. A dialog shows **"Location access was refused."**, the button keeps saying *📍 Use my location*, and the item can still be saved without coordinates.
+
+The lines that handle this case are in `useMyLocation()` in `src/app/add.tsx` (lines 44–48):
+
+```tsx
+const { status } = await Location.requestForegroundPermissionsAsync(); // 44: ask (or read the saved answer)
+if (status !== 'granted') {                                            // 45: refused?
+  Alert.alert('Location access was refused.');                        // 46: tell the user
+  return;                                                              // 47: stop, never call getCurrentPositionAsync
+}
+```
+
+Because of the early `return`, `getCurrentPositionAsync()` is never called without permission (it would throw an error). The camera has the same guard in `takePhoto()` with *Camera access is needed to take a photo.* The location permission was restored afterwards.
