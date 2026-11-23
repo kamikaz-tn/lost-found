@@ -67,3 +67,11 @@ Changes in the `styles` of `src/components/ItemCard.tsx`:
 - **colour + border**: a blue accent stripe on the left of each card (`borderLeftWidth: 5`, `borderLeftColor: '#2563eb'`, the same blue as the button);
 - **size and weight**: `title.fontSize` from `18` to `20`, `title.fontWeight` from `'600'` to `'700'`, plus a darker title colour `#111827`;
 - **place line**: `marginTop` from `4` to `6` and a slightly darker grey `#4b5563`.
+
+## Question 8
+
+The same code runs in the browser (press **w**), and adding an item works the same way: the counter goes from 3 to 4 and the fields are emptied. Visual differences compared with the Android emulator:
+
+- **Text and font**: the browser draws the text with its own font (system web font), so letters, widths and the 📍 emoji look slightly different from Android's Roboto and Noto emoji.
+- **No phone frame**: there is no Android status bar (clock, battery) or navigation bar, the page fills the browser window, and the header just shows `index`.
+- **Inputs**: clicking a field in the browser draws the browser's own focus outline around it and shows a text cursor/mouse pointer. On Android you get the native underline/cursor and the on-screen keyboard instead.
