@@ -32,3 +32,23 @@ Change 2, `<View>` replaced by `<div>`, also crashes on Android (`View config ge
 If two items have the same `id`, React prints a warning, *Encountered two children with the same key, `1`. Keys should be unique…*, and it can no longer tell the two rows apart. On later updates, a card can show the wrong content, be duplicated or disappear.
 
 (Exercise 5.3: I added a fourth item, `Black umbrella` found at the `Main entrance`.)
+
+## Question 5
+
+Before adding, the counter shows **3 items reported** (the three `STARTER_ITEMS`). After filling both fields and pressing *Add item* it shows **4 items reported**, and the new item appears at the **top** of the list.
+
+Once the item is added, **both fields are emptied**. The lines responsible are at the end of `addItem()`:
+
+```tsx
+setTitle('');
+setPlace('');
+```
+
+This works because the inputs are *controlled*: each `TextInput` displays `value={title}` / `value={place}`. Setting the state back to `''` re-renders the screen, and the inputs show the empty string. (`setItems([newItem, ...items])` is the line that makes the counter and the list update.)
+
+## Question 6
+
+React only re-renders a component when its state is replaced by a **new value**, and it compares the old and new values by reference.
+
+- `items.push(newItem)` **modifies the existing array in place** and does not call `setItems`. React is never told that something changed, so the screen is not re-rendered and the new item does not appear. Even `items.push(newItem); setItems(items)` would fail, because it is still the *same* array, so React thinks nothing changed.
+- `setItems([newItem, ...items])` builds a **new array** (the new item, then a copy of all the old ones) and hands it to React through the setter. React sees a different array, re-renders, and the list and counter update. State should be treated as **immutable**: never modify it, replace it.
