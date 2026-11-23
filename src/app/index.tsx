@@ -6,7 +6,7 @@ import ItemCard from '@/components/ItemCard';
 import { useItems } from '@/context/ItemsContext';
 
 export default function Index() {
-  const { items } = useItems();
+  const { items, loaded } = useItems();
   const waiting = items.filter((item) => !item.claimed).length;
 
   // Bonus: filter the list by title
@@ -14,6 +14,14 @@ export default function Index() {
   const visibleItems = items.filter((item) =>
     item.title.toLowerCase().includes(search.trim().toLowerCase()),
   );
+
+  if (!loaded) {
+    return (
+      <View style={styles.screen}>
+        <Text>Loading…</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.screen}>
