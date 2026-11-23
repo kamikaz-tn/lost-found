@@ -1,5 +1,6 @@
 import { Link } from 'expo-router';
-import { FlatList, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import { FlatList, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import ItemCard from '@/components/ItemCard';
 import { useItems } from '@/context/ItemsContext';
@@ -7,6 +8,12 @@ import { useItems } from '@/context/ItemsContext';
 export default function Index() {
   const { items } = useItems();
   const waiting = items.filter((item) => !item.claimed).length;
+
+  // Bonus: filter the list by title
+  const [search, setSearch] = useState('');
+  const visibleItems = items.filter((item) =>
+    item.title.toLowerCase().includes(search.trim().toLowerCase()),
+  );
 
   return (
     <View style={styles.screen}>
@@ -20,8 +27,15 @@ export default function Index() {
         </Pressable>
       </Link>
 
+      <TextInput
+        style={styles.search}
+        placeholder="Search by title…"
+        value={search}
+        onChangeText={setSearch}
+      />
+
       <FlatList
-        data={items}
+        data={visibleItems}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <Link href={{ pathname: '/item/[id]', params: { id: item.id } }} asChild>
@@ -31,7 +45,9 @@ export default function Index() {
           </Link>
         )}
         ItemSeparatorComponent={Separator}
-        ListEmptyComponent={<Text>Nothing reported yet.</Text>}
+        ListEmptyComponent={
+          <Text>{search.trim() === '' ? 'Nothing reported yet.' : 'No item matches your search.'}</Text>
+        }
       />
 
       <Text style={styles.footer}>Running on {Platform.OS}</Text>
@@ -64,6 +80,15 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontWeight: '600',
     fontSize: 16,
+  },
+  search: {
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#d1d5db',
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    marginBottom: 12,
   },
   separator: {
     height: 10,

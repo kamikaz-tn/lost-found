@@ -91,3 +91,15 @@ In the browser (**w**), `http://localhost:8081/item/999` shows the "not found" b
 | `/` (`index.tsx`) | app start, back from the other screens | `/add` (button), `/item/[id]` (tap a card) | `items` |
 | `/add` (`add.tsx`) | `+ Report an item` on `/` | back to `/` after *Save* (`router.back()`) | `addItem` |
 | `/item/[id]` (`item/[id].tsx`) | tap a card on `/` (or type the URL) | back to `/` (header arrow, after *Remove*, or *Back to the list*) | `items`, `toggleClaimed`, `removeItem` |
+
+## Bonus: filtering the list
+
+In `src/app/index.tsx`, a `TextInput` (*Search by title…*) above the list keeps the typed text in `useState`. The `FlatList` receives `visibleItems` instead of `items`:
+
+```tsx
+const visibleItems = items.filter((item) =>
+  item.title.toLowerCase().includes(search.trim().toLowerCase()),
+);
+```
+
+The search ignores case (`card` and `CARD` both find *Student card*). When nothing matches, the empty component shows *No item matches your search.* The counter line still counts **all** items.
