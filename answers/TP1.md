@@ -52,3 +52,9 @@ React only re-renders a component when its state is replaced by a **new value**,
 
 - `items.push(newItem)` **modifies the existing array in place** and does not call `setItems`. React is never told that something changed, so the screen is not re-rendered and the new item does not appear. Even `items.push(newItem); setItems(items)` would fail, because it is still the *same* array, so React thinks nothing changed.
 - `setItems([newItem, ...items])` builds a **new array** (the new item, then a copy of all the old ones) and hands it to React through the setter. React sees a different array, re-renders, and the list and counter update. State should be treated as **immutable**: never modify it, replace it.
+
+## Question 7
+
+With `useState<Item[]>([])` the list starts empty. The screen shows the counter **0 items reported**, the form, and, in place of the cards, the text **"Nothing reported yet."** This text comes from the `ListEmptyComponent` prop of the `FlatList`, which is only rendered when `data` is empty.
+
+Why it matters: a blank area looks like a bug (is it still loading? did it crash?). An *empty state* tells users the app works and the list simply has nothing in it yet, and it can tell them what to do next (here, report an item with the form above). `STARTER_ITEMS` was put back afterwards.
