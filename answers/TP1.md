@@ -75,3 +75,7 @@ The same code runs in the browser (press **w**), and adding an item works the sa
 - **Text and font**: the browser draws the text with its own font (system web font), so letters, widths and the 📍 emoji look slightly different from Android's Roboto and Noto emoji.
 - **No phone frame**: there is no Android status bar (clock, battery) or navigation bar, the page fills the browser window, and the header just shows `index`.
 - **Inputs**: clicking a field in the browser draws the browser's own focus outline around it and shows a text cursor/mouse pointer. On Android you get the native underline/cursor and the on-screen keyboard instead.
+
+## Bonus: long press to remove
+
+In `src/app/index.tsx`, each `ItemCard` is wrapped in a `Pressable` with `onLongPress`, which calls `removeItem(item.id)`. That function builds a **new** list without that item: `setItems(items.filter((item) => item.id !== id))`. Holding a card for about half a second removes it, and the counter goes down by one.

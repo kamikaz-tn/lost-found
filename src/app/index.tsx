@@ -31,6 +31,11 @@ export default function Index() {
     setPlace('');
   }
 
+  // Bonus: a long press on a card removes the item
+  function removeItem(id: string) {
+    setItems(items.filter((item) => item.id !== id));
+  }
+
   return (
     <View style={styles.screen}>
       <Text style={styles.count}>{items.length} items reported</Text>
@@ -60,7 +65,11 @@ export default function Index() {
       <FlatList
         data={items}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <ItemCard title={item.title} place={item.place} />}
+        renderItem={({ item }) => (
+          <Pressable onLongPress={() => removeItem(item.id)}>
+            <ItemCard title={item.title} place={item.place} />
+          </Pressable>
+        )}
         ItemSeparatorComponent={Separator}
         ListEmptyComponent={<Text>Nothing reported yet.</Text>}
       />
