@@ -46,3 +46,11 @@ After turning on *Returned to its owner* for the *Student card* and going back:
 - **In the counter line**: the first number stays the same and the second goes down by one: `3 items reported · 2 still waiting…` becomes `3 items reported · 1 still waiting for their owner`. `toggleClaimed` only flips `claimed`. It does not remove the item.
 
 The `<Switch>` is the platform's own native control. On Android it is the Material switch (a thumb sliding on a track). A classmate running the **same code on an iPhone** sees the **iOS switch**: the wider rounded toggle with a white knob that turns **green** when on. React Native maps `<Switch>` to each platform's native widget instead of drawing its own.
+
+## Exercise 7 / Question 6
+
+On the emulator, *Remove this item* opens the native confirmation dialog (*Remove this item?*, Cancel / Remove). After *Remove*, the item is deleted from the context and `router.back()` returns to the list.
+
+In the browser (**w**), `http://localhost:8081/item/999` shows the "not found" branch of `[id].tsx`. No item has the id `999`, so `items.find(...)` returns `undefined` and the screen shows **"This item does not exist (anymore)."** with a **Back to the list** link (the header just says *Item*).
+
+**The confirmation dialog does not appear in the browser.** Pressing *Remove this item* on the web does nothing: no dialog, and the item stays. `Alert.alert` is a native API (Android/iOS dialogs). On the web, React Native for Web's `Alert` is an empty function, so the callback that removes the item is never called. (See *Common errors*: "Alert dialogs only work on a device or emulator.")
