@@ -25,3 +25,15 @@ The add screen never sends the item back to the home screen. **Both screens shar
 2. `addItem` runs inside `ItemsProvider`, the component that owns the list. It calls `setItems(...)` and replaces the `items` state with a new array that starts with the new item.
 3. `ItemsProvider` sits **above every screen** (it wraps the `<Stack>` in `_layout.tsx`). When its state changes, every component that reads the context with `useItems()` re-renders with the new value.
 4. The home screen reads `items` with `useItems()`, so it re-renders with the new list. The counter goes from `3 items reported · 2 still waiting…` to `4 items reported · 3 still waiting…`, and the new card appears first. `router.back()` closes the modal, and the home screen underneath is already up to date.
+
+## Question 4
+
+The address of the screen carries the id. Each card in the list is a `Link` to `{ pathname: '/item/[id]', params: { id: item.id } }`, so tapping the *Student card* opens `/item/2`. The file `src/app/item/[id].tsx` matches any `/item/<something>`, and the part in brackets becomes a **route parameter** named `id`.
+
+The screen reads it with the hook **`useLocalSearchParams`** from `expo-router`:
+
+```tsx
+const { id } = useLocalSearchParams<{ id: string }>();
+```
+
+It then looks up the item with that id in the shared list: `items.find((candidate) => candidate.id === id)`. It also sets the header title to the item's name with `<Stack.Screen options={{ title: item.title }} />`.
