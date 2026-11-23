@@ -58,3 +58,12 @@ React only re-renders a component when its state is replaced by a **new value**,
 With `useState<Item[]>([])` the list starts empty. The screen shows the counter **0 items reported**, the form, and, in place of the cards, the text **"Nothing reported yet."** This text comes from the `ListEmptyComponent` prop of the `FlatList`, which is only rendered when `data` is empty.
 
 Why it matters: a blank area looks like a bug (is it still loading? did it crash?). An *empty state* tells users the app works and the list simply has nothing in it yet, and it can tell them what to do next (here, report an item with the form above). `STARTER_ITEMS` was put back afterwards.
+
+## Exercise 8: my own style
+
+Changes in the `styles` of `src/components/ItemCard.tsx`:
+
+- **border radius**: `card.borderRadius` from `12` to `16` (rounder cards);
+- **colour + border**: a blue accent stripe on the left of each card (`borderLeftWidth: 5`, `borderLeftColor: '#2563eb'`, the same blue as the button);
+- **size and weight**: `title.fontSize` from `18` to `20`, `title.fontWeight` from `'600'` to `'700'`, plus a darker title colour `#111827`;
+- **place line**: `marginTop` from `4` to `6` and a slightly darker grey `#4b5563`.

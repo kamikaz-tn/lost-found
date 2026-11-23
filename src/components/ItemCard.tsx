@@ -17,17 +17,20 @@ export default function ItemCard({ title, place }: Props) {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#ffffff',
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 16,
     borderWidth: 1,
     borderColor: '#e5e7eb',
+    borderLeftWidth: 5,
+    borderLeftColor: '#2563eb',
   },
   title: {
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#111827',
   },
   place: {
-    marginTop: 4,
-    color: '#6b7280',
+    marginTop: 6,
+    color: '#4b5563',
   },
 });
