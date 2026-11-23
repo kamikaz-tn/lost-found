@@ -103,3 +103,14 @@ const visibleItems = items.filter((item) =>
 ```
 
 The search ignores case (`card` and `CARD` both find *Student card*). When nothing matches, the empty component shows *No item matches your search.* The counter line still counts **all** items.
+
+## Final questions
+
+**1. Why did the list have to move from `index.tsx` into a context?**
+State created with `useState` inside `index.tsx` belongs to that one screen: only it (and the components it renders) can read or change it. With several screens, `/add` must *add* to the list and `/item/[id]` must *read, toggle and remove* items, but they are not children of `index.tsx`, so they could not reach it. Moving the list into `ItemsProvider`, which wraps the whole `<Stack>` in `_layout.tsx`, puts the data **above all screens**: one shared source of truth that every screen reaches with `useItems()`, and that re-renders them all when it changes.
+
+**2. What do the square brackets in `item/[id].tsx` mean?**
+They make a **dynamic route segment**. `[id]` is a placeholder that matches *any* value in that position of the URL: `/item/1`, `/item/42`, `/item/999`… all open the same screen file. The matched value is passed to the screen as a parameter called `id`, which it reads with `useLocalSearchParams()`.
+
+**3. What does `router.back()` do to the stack?**
+It **pops** the screen on top of the stack, like taking the top card off the pile, and shows the screen underneath again, the one we came from. After *Save* in `/add`, it closes the report modal and goes back to the list. After *Remove* in `/item/[id]`, it leaves the detail screen of the item that no longer exists. The previous screen is not recreated: it was still in the stack, already up to date through the context.
