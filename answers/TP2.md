@@ -37,3 +37,12 @@ const { id } = useLocalSearchParams<{ id: string }>();
 ```
 
 It then looks up the item with that id in the shared list: `items.find((candidate) => candidate.id === id)`. It also sets the header title to the item's name with `<Stack.Screen options={{ title: item.title }} />`.
+
+## Question 5
+
+After turning on *Returned to its owner* for the *Student card* and going back:
+
+- **On the card**: it becomes faded (`opacity: 0.6`, style `cardClaimed`) and shows a green **✓ Claimed** badge under the place.
+- **In the counter line**: the first number stays the same and the second goes down by one: `3 items reported · 2 still waiting…` becomes `3 items reported · 1 still waiting for their owner`. `toggleClaimed` only flips `claimed`. It does not remove the item.
+
+The `<Switch>` is the platform's own native control. On Android it is the Material switch (a thumb sliding on a track). A classmate running the **same code on an iPhone** sees the **iOS switch**: the wider rounded toggle with a white knob that turns **green** when on. React Native maps `<Switch>` to each platform's native widget instead of drawing its own.
