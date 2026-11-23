@@ -30,3 +30,8 @@ The `loaded` flag makes saving wait until the first load is done, so we only eve
 ## Question 3
 
 If the gallery is closed without choosing anything, `launchImageLibraryAsync` still resolves, but with **`result.canceled === true`** (a boolean) and `result.assets === null`. That is why the code checks `if (!result.canceled)` before reading `result.assets[0].uri`. On cancel, nothing happens and the previous photo (if any) stays. When a picture *is* chosen, `canceled` is `false` and `assets[0].uri` is the address of the picked image, which then appears above the buttons.
+
+## Question 4
+
+- **The camera** gives the app **direct access to a sensor**: once allowed, the app could take pictures or video of the user and their surroundings by itself. Android and iOS treat it as a *dangerous* permission (`android.permission.CAMERA`), so the app must call `requestCameraPermissionsAsync()` and get an explicit **yes** from the user at runtime. The system dialog only appears the first time. The answer is then remembered.
+- **The gallery picker** does not give the app access to the photo library at all. It opens the **system's own photo picker**, which runs outside our app. The **user** chooses one picture, and the app only receives that single file. Since the user's choice already is the consent, and the app cannot browse or read the other photos, no permission is needed.
