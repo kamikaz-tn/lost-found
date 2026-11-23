@@ -1,14 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
 type Props = {
   title: string;
   place: string;
   claimed: boolean;
+  photoUri?: string;
 };
 
-export default function ItemCard({ title, place, claimed }: Props) {
+export default function ItemCard({ title, place, claimed, photoUri }: Props) {
   return (
     <View style={[styles.card, claimed && styles.cardClaimed]}>
+      {photoUri && <Image source={{ uri: photoUri }} style={styles.thumb} />}
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.place}>📍 {place}</Text>
       {claimed && <Text style={styles.badge}>✓ Claimed</Text>}
@@ -26,6 +28,12 @@ const styles = StyleSheet.create({
   },
   cardClaimed: {
     opacity: 0.6,
+  },
+  thumb: {
+    width: '100%',
+    height: 140,
+    borderRadius: 8,
+    marginBottom: 10,
   },
   title: {
     fontSize: 18,

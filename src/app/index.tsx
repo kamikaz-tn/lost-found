@@ -48,7 +48,12 @@ export default function Index() {
         renderItem={({ item }) => (
           <Link href={{ pathname: '/item/[id]', params: { id: item.id } }} asChild>
             <Pressable>
-              <ItemCard title={item.title} place={item.place} claimed={item.claimed} />
+              <ItemCard
+                title={item.title}
+                place={item.place}
+                claimed={item.claimed}
+                photoUri={item.photoUri}
+              />
             </Pressable>
           </Link>
         )}

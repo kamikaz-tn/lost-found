@@ -46,3 +46,7 @@ After setting a point on the map in the emulator's extended controls (a point in
 - **`10.60839` is the longitude**: the east–west position, between −180 and +180, counted from the Greenwich meridian. It is positive because Tunisia is east of Greenwich.
 
 The order comes from the code in `add.tsx`: `` `📍 ${coords.latitude.toFixed(5)}, ${coords.longitude.toFixed(5)}` ``, latitude first and longitude second, rounded to 5 decimals (about 1 m). When the item is saved, both numbers are stored in it (`latitude`, `longitude`).
+
+## Exercise 6: photos in the list
+
+`ItemCard` takes an optional `photoUri` prop and shows a 140 px thumbnail above the title only when it is set (`{photoUri && <Image … />}`). `index.tsx` passes `photoUri={item.photoUri}`. A report saved with a photo shows it on its card, and the cards without a photo (the starter items) look exactly as before.
