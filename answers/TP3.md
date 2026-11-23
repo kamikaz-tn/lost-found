@@ -26,3 +26,7 @@ Loading and saving are both asynchronous, so the result depends on which finishe
 - Even when the read wins, the storage holds `[]` for a moment at every start. If the app is closed or crashes during that moment, the data is gone.
 
 The `loaded` flag makes saving wait until the first load is done, so we only ever save a list that really came from the device.
+
+## Question 3
+
+If the gallery is closed without choosing anything, `launchImageLibraryAsync` still resolves, but with **`result.canceled === true`** (a boolean) and `result.assets === null`. That is why the code checks `if (!result.canceled)` before reading `result.assets[0].uri`. On cancel, nothing happens and the previous photo (if any) stays. When a picture *is* chosen, `canceled` is `false` and `assets[0].uri` is the address of the picked image, which then appears above the buttons.
