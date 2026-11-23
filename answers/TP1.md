@@ -79,3 +79,16 @@ The same code runs in the browser (press **w**), and adding an item works the sa
 ## Bonus: long press to remove
 
 In `src/app/index.tsx`, each `ItemCard` is wrapped in a `Pressable` with `onLongPress`, which calls `removeItem(item.id)`. That function builds a **new** list without that item: `setItems(items.filter((item) => item.id !== id))`. Holding a card for about half a second removes it, and the counter goes down by one.
+
+## Final questions
+
+**1. What is the difference between a prop and state?**
+A **prop** is a value passed *into* a component by its parent, like the arguments of a function (`<ItemCard title="…" place="…" />`). The component only reads its props and cannot change them. **State** is data a component *owns and manages itself* with `useState` (`items`, `title`, `place` in `index.tsx`). It changes over time through its setter (`setItems`, `setTitle`…), and every change re-renders the component. A parent's state is often passed down to children as props.
+
+**2. Why must every piece of text be inside `<Text>`?**
+React Native has no HTML and no browser. Each component is turned into a real native widget. `<View>` becomes a plain container (`android.view.View` / `UIView`) that cannot draw text. Only `<Text>` becomes a native text widget (`TextView` / `UILabel`) that knows how to draw letters, fonts and colours. Loose text has nothing to be drawn with, so React Native refuses it with *Text strings must be rendered within a &lt;Text&gt; component.*
+
+**3. What does `FlatList` do better than writing the cards one by one?**
+- It builds the cards **from the data** (`data` + `renderItem`), so adding or removing an item in the array is enough: no copy-pasted JSX.
+- It is **virtualised**: it only renders the rows visible on screen (plus a few around them) and recycles them while scrolling, so a list of thousands of items stays fast and light in memory.
+- It scrolls by itself and has built-in extras: `keyExtractor` (stable keys), `ItemSeparatorComponent`, `ListEmptyComponent`, headers and footers, pull-to-refresh, infinite loading (`onEndReached`).
