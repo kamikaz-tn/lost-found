@@ -50,3 +50,19 @@ The order comes from the code in `add.tsx`: `` `📍 ${coords.latitude.toFixed(5
 ## Exercise 6: photos in the list
 
 `ItemCard` takes an optional `photoUri` prop and shows a 140 px thumbnail above the title only when it is set (`{photoUri && <Image … />}`). `index.tsx` passes `photoUri={item.photoUri}`. A report saved with a photo shows it on its card, and the cards without a photo (the starter items) look exactly as before.
+
+## Question 6
+
+**Share sheet.** *Share this item* calls `Share.share({ message: 'Found on campus: <title> (<place>)' })`, which opens Android's **system share sheet**. It lists the apps installed on the emulator that can receive text, typically **Gmail, Messages, Google Drive, Quick Share / Nearby Share and Bluetooth**, plus a **Copy** action that puts the text on the clipboard. The exact list depends on the apps installed on the phone. Our app does not choose them: the system does.
+
+**No map link without a location.** The link is wrapped in a condition:
+
+```tsx
+{item.latitude !== undefined && (
+  <Pressable onPress={openMap}>…Open the exact spot in Maps…</Pressable>
+)}
+```
+
+`latitude` and `longitude` are optional fields (`latitude?: number`). An item saved without pressing *Use my location* (or the starter items) has no `latitude`, so it is `undefined`, the condition is false and nothing is rendered. Without coordinates there is no "exact spot" to open: the URL would be `…query=undefined,undefined`.
+
+For an item with a location, `Linking.openURL('https://www.google.com/maps/search/?api=1&query=<lat>,<lng>')` hands the link to the system. It opens Google Maps on the spot, or the browser on an emulator without a maps app.
