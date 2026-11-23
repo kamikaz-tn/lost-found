@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { useItems } from '@/context/ItemsContext';
+import { keepPhoto } from '@/lib/keepPhoto';
 
 type Coords = { latitude: number; longitude: number };
 
@@ -50,9 +51,11 @@ export default function AddScreen() {
     setCoords({ latitude: position.coords.latitude, longitude: position.coords.longitude });
   }
 
-  function save() {
+  async function save() {
     if (!canSave) return;
-    addItem({ title: title.trim(), place: place.trim(), photoUri, ...coords });
+    // Bonus: copy the temporary photo into the app's own folder before saving its address
+    const savedPhotoUri = photoUri ? await keepPhoto(photoUri) : undefined;
+    addItem({ title: title.trim(), place: place.trim(), photoUri: savedPhotoUri, ...coords });
     router.back();
   }
 

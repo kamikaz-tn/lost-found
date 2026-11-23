@@ -73,14 +73,26 @@ For an item with a location, `Linking.openURL('https://www.google.com/maps/searc
 
 With *Location* denied for Expo Go (Settings → Apps → Expo Go → Permissions), pressing *Use my location* **does not crash**. A dialog shows **"Location access was refused."**, the button keeps saying *📍 Use my location*, and the item can still be saved without coordinates.
 
-The lines that handle this case are in `useMyLocation()` in `src/app/add.tsx` (lines 44–48):
+The lines that handle this case are in `useMyLocation()` in `src/app/add.tsx` (lines 45–49):
 
 ```tsx
-const { status } = await Location.requestForegroundPermissionsAsync(); // 44: ask (or read the saved answer)
-if (status !== 'granted') {                                            // 45: refused?
-  Alert.alert('Location access was refused.');                        // 46: tell the user
-  return;                                                              // 47: stop, never call getCurrentPositionAsync
+const { status } = await Location.requestForegroundPermissionsAsync(); // 45: ask (or read the saved answer)
+if (status !== 'granted') {                                            // 46: refused?
+  Alert.alert('Location access was refused.');                        // 47: tell the user
+  return;                                                              // 48: stop, never call getCurrentPositionAsync
 }
 ```
 
 Because of the early `return`, `getCurrentPositionAsync()` is never called without permission (it would throw an error). The camera has the same guard in `takePhoto()` with *Camera access is needed to take a photo.* The location permission was restored afterwards.
+
+## Bonus: keeping the photos
+
+`ImagePicker` returns a **temporary** file in the app's cache (`…/cache/ImagePicker/xxx.jpeg`), which Android or iOS may delete to free space. The item would then point to a file that no longer exists.
+
+I installed `expo-file-system` (`npx expo install expo-file-system`) and wrote `src/lib/keepPhoto.ts`. When the report is saved, `save()` in `add.tsx` calls `keepPhoto(photoUri)`, which:
+
+1. creates (if needed) the folder `photos/` inside the app's **documents** folder (`new Directory(Paths.document, 'photos').create({ idempotent: true, intermediates: true })`). The system never cleans this folder on its own;
+2. copies the temporary file there under a unique name (`new File(tempUri).copy(new File(folder, `${Date.now()}${extension}`))`);
+3. returns the **new permanent `file://` address**. That address is stored in the item and in AsyncStorage.
+
+The copy is only made when pressing *Save*, so photos picked and then replaced do not leave copies behind. If the copy fails, the item is still saved with the temporary address. In the browser there is no file system, so the address given by the picker is kept as is.
